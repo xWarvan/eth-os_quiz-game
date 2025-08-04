@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eth OS Quiz Game | Earn Airdrop Codes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Kanit', sans-serif;
+            background-color: #0f0e15;
+        }
+        .ethos-gradient {
+            background: linear-gradient(135deg, #6e45e2 0%, #88d3ce 100%);
+        }
+        .option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(110, 69, 226, 0.3);
+        }
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="text-white min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="py-4 px-6 border-b border-purple-900">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="w-10 h-10 rounded-full ethos-gradient flex items-center justify-center">
+                    <span class="text-xl font-bold">EOS</span>
+                </div>
+                <h1 class="text-2xl font-bold bg-clip-text text-transparent ethos-gradient">
+                    Eth OS Quiz
+                </h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span id="score-display" class="px-4 py-2 bg-purple-900 rounded-full">
+                    Score: <span id="score">0</span>
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow container mx-auto px-4 py-8 flex flex-col items-center">
+        <!-- Quiz Container -->
+        <div id="quiz-container" class="w-full max-w-2xl bg-gray-800 rounded-xl p-6 shadow-lg border border-purple-900">
+            <!-- Question Progress -->
+            <div class="flex justify-between items-center mb-6">
+                <span id="question-count" class="text-purple-400">Question 1/10</span>
+                <div class="w-1/2 bg-gray-700 rounded-full h-2.5">
+                    <div id="progress-bar" class="bg-purple-500 h-2.5 rounded-full" style="width: 10%"></div>
+                </div>
+            </div>
+
+            <!-- Question -->
+            <h2 id="question" class="text-2xl font-semibold mb-8 text-center">
+                What is the main token of the Eth OS ecosystem?
+            </h2>
+
+            <!-- Options -->
+            <div id="options" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                <!-- Options will be inserted here by JavaScript -->
+            </div>
+
+            <!-- Feedback -->
+            <div id="feedback" class="hidden text-center py-4 px-6 rounded-lg mb-6"></div>
+
+            <!-- Next Button -->
+            <button id="next-btn" class="hidden w-full py-3 px-6 bg-purple-600 hover:bg-purple-700 rounded-lg font-semibold transition">
+                Next Question
+            </button>
+        </div>
+
+        <!-- Results Container (Initially Hidden) -->
+        <div id="results-container" class="hidden w-full max-w-2xl bg-gray-800 rounded-xl p-8 shadow-lg border border-purple-900 text-center mt-6">
+            <div class="ethos-gradient w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fas fa-trophy text-3xl"></i>
+            </div>
+            <h2 class="text-3xl font-bold mb-4">Quiz Completed!</h2>
+            <p class="text-xl mb-2">Your final score: <span id="final-score" class="font-bold">80</span>/100</p>
+            <p id="reward-message" class="text-lg mb-6 text-purple-300"></p>
+            
+            <div id="reward-section" class="hidden">
+                <p class="mb-4">🎉 You've earned an Eth OS airdrop code!</p>
+                <a id="code-link" href="https://ethos.vision?ref=quizgame" target="_blank" 
+                   class="inline-block py-3 px-6 bg-purple-600 hover:bg-purple-700 rounded-lg font-semibold transition mb-4">
+                   Claim Your 0.5 Code
+                </a>
+                <p class="mb-4 text-gray-400">OR</p>
+                <button id="share-btn" class="w-full py-3 px-6 bg-blue-500 hover:bg-blue-600 rounded-lg font-semibold transition flex items-center justify-center space-x-2">
+                    <i class="fab fa-twitter"></i>
+                    <span>Share & Earn +0.5 Code</span>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-6 px-4 border-t border-purple-900 text-center text-gray-400">
+        <p>This is an unofficial quiz game. Earn codes for the official <a href="https://ethos.vision" target="_blank" class="text-purple-400 hover:underline">Eth OS airdrop</a>.</p>
+    </footer>
+
+    <script>
+        // Quiz Questions
+        const questions = [
+            {
+                question: "What is the main token of the Eth OS ecosystem?",
+                options: ["$ETH", "$EOS", "$BOOST", "$AIR"],
+                answer: 1
+            },
+            {
+                question: "How many epochs are in the Eth OS airdrop?",
+                options: ["5", "11", "15", "20"],
+                answer: 1
+            },
+            {
+                question: "What do you get when you burn EOS?",
+                options: ["ETH", "BOOST", "AIR", "NFT"],
+                answer: 1
+            },
+            {
+                question: "How often should you say 'GM' to qualify for daily rewards?",
+                options: ["Daily", "Every 2 days", "Weekly", "Only once"],
+                answer: 1
+            },
+            {
+                question: "What happens to APY in each airdrop epoch?",
+                options: ["Increases by 6%", "Decreases by 5%", "Stays the same", "Random change"],
+                answer: 0
+            },
+            {
+                question: "What is BOOST used for in Eth OS?",
+                options: ["Trading", "Increasing APY", "Governance", "Paying fees"],
+                answer: 1
+            },
+            {
+                question: "Where do EOS holders get ETH rewards from?",
+                options: ["Staking", "Trading volume", "Burning tokens", "Mining"],
+                answer: 1
+            },
+            {
+                question: "What's the benefit of early participation in the airdrop?",
+                options: ["2x rewards", "Lower fees", "Exclusive NFTs", "No difference"],
+                answer: 0
+            },
+            {
+                question: "What makes Eth OS unique according to its description?",
+                options: ["Zero gas fees", "7 composable mechanics", "AI integration", "Bitcoin bridge"],
+                answer: 1
+            },
+            {
+                question: "How can you get more airdrop codes besides the quiz?",
+                options: ["By staking", "Through social media tasks", "Buying them", "Mining"],
+                answer: 1
+            }
+        ];
+
+        // Game State
+        let currentQuestion = 0;
+        let score = 0;
+        let quizCompleted = false;
+
+        // DOM Elements
+        const quizContainer = document.getElementById('quiz-container');
+        const resultsContainer = document.getElementById('results-container');
+        const questionElement = document.getElementById('question');
+        const optionsElement = document.getElementById('options');
+        const questionCountElement = document.getElementById('question-count');
+        const progressBar = document.getElementById('progress-bar');
+        const scoreElement = document.getElementById('score');
+        const finalScoreElement = document.getElementById('final-score');
+        const feedbackElement = document.getElementById('feedback');
+        const nextButton = document.getElementById('next-btn');
+        const rewardSection = document.getElementById('reward-section');
+        const rewardMessage = document.getElementById('reward-message');
+        const shareButton = document.getElementById('share-btn');
+
+        // Initialize Quiz
+        function loadQuestion() {
+            const question = questions[currentQuestion];
+            questionElement.textContent = question.question;
+            questionCountElement.textContent = `Question ${currentQuestion + 1}/${questions.length}`;
+            progressBar.style.width = `${((currentQuestion + 1) / questions.length) * 100}%`;
+            
+            optionsElement.innerHTML = '';
+            question.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.className = 'option bg-gray-700 hover:bg-gray-600 rounded-lg p-4 text-left transition transform hover:-translate-y-1';
+                button.innerHTML = `
+                    <span class="inline-block w-6 h-6 rounded-full border border-purple-400 mr-3 text-center">${String.fromCharCode(65 + index)}</span>
+                    ${option}
+                `;
+                button.addEventListener('click', () => selectOption(index));
+                optionsElement.appendChild(button);
+            });
+            
+            nextButton.classList.add('hidden');
+            feedbackElement.classList.add('hidden');
+        }
+
+        // Handle Option Selection
+        function selectOption(selectedIndex) {
+            const question = questions[currentQuestion];
+            const options = optionsElement.querySelectorAll('button');
+            
+            // Disable all options
+            options.forEach(option => {
+                option.disabled = true;
+            });
+            
+            // Check answer
+            if (selectedIndex === question.answer) {
+                options[selectedIndex].classList.add('bg-green-600', 'hover:bg-green-600');
+                feedbackElement.textContent = 'Correct! +10 points';
+                feedbackElement.className = 'block bg-green-900 text-green-200';
+                score += 10;
+                scoreElement.textContent = score;
+            } else {
+                options[selectedIndex].classList.add('bg-red-600', 'hover:bg-red-600');
+                options[question.answer].classList.add('bg-green-600', 'hover:bg-green-600');
+                feedbackElement.textContent = `Incorrect! The correct answer was: ${question.options[question.answer]}`;
+                feedbackElement.className = 'block bg-red-900 text-red-200';
+            }
+            
+            feedbackElement.classList.remove('hidden');
+            nextButton.classList.remove('hidden');
+        }
+
+        // Move to Next Question
+        function nextQuestion() {
+            currentQuestion++;
+            
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+            } else {
+                endQuiz();
+            }
+        }
+
+        // End Quiz and Show Results
+        function endQuiz() {
+            quizContainer.classList.add('hidden');
+            resultsContainer.classList.remove('hidden');
+            finalScoreElement.textContent = score;
+            
+            if (score >= 50) {
+                rewardMessage.textContent = "Congratulations! You've qualified for an airdrop code!";
+                rewardSection.classList.remove('hidden');
+            } else {
+                rewardMessage.textContent = "Score at least 50 points to earn airdrop codes. Try again!";
+            }
+            
+            quizCompleted = true;
+        }
+
+        // Share Results on Twitter
+        function shareResults() {
+            const tweetText = `I scored ${score}/100 on the Eth OS Quiz Game! Test your DeFi knowledge and earn airdrop codes: ${window.location.href} #EthereumOS #DeFi`;
+            const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
+            window.open(tweetUrl, '_blank');
+            
+            // In a real implementation, you would track shares and reward users
+            alert("After sharing, you'll receive +0.5 code (would be handled via backend in production)");
+        }
+
+        // Event Listeners
+        nextButton.addEventListener('click', nextQuestion);
+        shareButton.addEventListener('click', shareResults);
+
+        // Start Quiz
+        loadQuestion();
+    </script>
+</body>
+</html>
